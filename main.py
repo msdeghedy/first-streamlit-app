@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import altair as alt 
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 st.set_page_config(layout="wide")
 #
@@ -100,14 +102,52 @@ with tab2:
 
   
   st.altair_chart(churn_reasons_count, use_container_width=True)
+  
+  st.subheader("Drill-Down: Monthly Charges for Fiber Optic Customers")
+  st.write("This chart shows a surprising insight: customers with Fiber Optic service who churned often had lower monthly charges than those who stayed.")
 
+    # 1. Filter for Fiber Optic customers from the main filtered_df
+  fiber_customers = filtered_df[filtered_df['Internet Service'] == 'Fiber optic']
 
+    # 2. Create a figure and axis object
+  fig, ax = plt.subplots(figsize=(8, 5))
 
+    # 3. Create the box plot using Seaborn
+  sns.boxplot(
+        data=fiber_customers,
+        x='Churn Label',
+        y='Monthly Charges',
+        ax=ax
+    )
+  ax.set_title('Monthly Charges: Churned vs. Non-Churned Fiber Optic Customers')
+  ax.set_xlabel('Customer Churned?')
+  ax.set_ylabel('Monthly Charges ($)')
 
+    # 4. Display the plot in your Streamlit app
+  st.pyplot(fig)
+  iber_customers = filtered_df[filtered_df['Internet Service'] == 'Fiber optic'].copy()
 
+# 2. Create the price brackets using pd.cut
+  bins = [0, 70, 95, 120]
+  labels = ['Low-Tier ($0-70)', 'Mid-Tier ($70-95)', 'High-Tier ($95+)']
+  fiber_customers['PriceBracket'] = pd.cut(
+    fiber_customers['Monthly Charges'],
+    bins=bins,
+    labels=labels
+ )
 
+# 3. Calculate the churn rate for the new brackets
+  churn_by_bracket = fiber_customers.groupby('PriceBracket')['Churn Value'].mean().reset_index()
 
+# 4. Create the Altair bar chart
+  bracket_chart = alt.Chart(churn_by_bracket).mark_bar().encode(
+    y=alt.X('PriceBracket:N', title='Price Bracket', sort='-x'),
+    x=alt.Y('Churn Value:Q', title='Churn Rate', axis=alt.Axis(format='%'))
+).properties(
+    title='Churn Rate by Price Bracket for Fiber Optic Customers'
+)
 
-
-
+# 5. Display the chart
+  st.altair_chart(bracket_chart, use_container_width=True)
+  
 
