@@ -110,7 +110,7 @@ with tab2:
   fiber_customers = filtered_df[filtered_df['Internet Service'] == 'Fiber optic']
 
     # 2. Create a figure and axis object
-  fig, ax = plt.subplots(figsize=(8, 5))
+  fig, ax = plt.subplots(figsize=(5, 2))
 
     # 3. Create the box plot using Seaborn
   sns.boxplot(
