@@ -6,6 +6,10 @@ import seaborn as sns
 
 st.set_page_config(layout="wide")
 #
+st.title('Customer Churn Analysis Dashboard')
+st.markdown('This dashboard provides insights into customer churn for a telecommunications company. Use the filters on the left to explore different segments of customers and understand their churn behavior.')
+
+st.markdown(' ')
 
 df = pd.read_csv('Telco_customer_churn.csv')
 
@@ -64,7 +68,6 @@ churn_rate_by_internet_service_chart = alt.Chart(churn_rate_by_internet_service)
 )
 
 churn_reasons = filtered_df[filtered_df['Churn Reason'] != 'Don\'t know'].groupby('Churn Reason')['Count'].sum().sort_values(ascending=False).reset_index().head()
-
 
 tab1, tab2 = st.tabs(["Churn Overview", "Deep Dive"])
 
@@ -141,12 +144,13 @@ with tab2:
 
 # 4. Create the Altair bar chart
   bracket_chart = alt.Chart(churn_by_bracket).mark_bar().encode(
-    y=alt.X('PriceBracket:N', title='Price Bracket', sort='-x'),
-    x=alt.Y('Churn Value:Q', title='Churn Rate', axis=alt.Axis(format='%'))
+    x=alt.X('PriceBracket:N', title='Price Bracket', sort='-x'),
+    y=alt.Y('Churn Value:Q', title='Churn Rate', axis=alt.Axis(format='%')), 
+    color='Churn Value'
 ).properties(
     title='Churn Rate by Price Bracket for Fiber Optic Customers'
 )
-
+  st.markdown("\n\n\n\n\n")
 # 5. Display the chart
   st.altair_chart(bracket_chart, use_container_width=True)
   
