@@ -54,7 +54,7 @@ churn_rate_by_contract_chart = alt.Chart(churn_rate_by_contract).mark_bar().enco
     x=alt.Y('Churn Value:Q', title='Churn Rate', axis=alt.Axis(format='%')),
     color='Churn Value'
 ).properties(
-    title='Churn Rate by Contract Type'
+    title=''
 )
 
 
@@ -64,7 +64,7 @@ churn_rate_by_internet_service_chart = alt.Chart(churn_rate_by_internet_service)
     x=alt.Y('Churn Value:Q', title='Churn Rate', axis=alt.Axis(format='%')),
     color='Churn Value'
 ).properties(
-    title='Churn Rate by Internet Service Type'
+    title=''
 )
 
 churn_reasons = filtered_df[filtered_df['Churn Reason'] != 'Don\'t know'].groupby('Churn Reason')['Count'].sum().sort_values(ascending=False).reset_index().head()
@@ -78,6 +78,7 @@ with tab1:
         st.metric(
             label="Total Customers",
             value=filtered_df.shape[0],
+          
 
         )
     with col2:
@@ -86,21 +87,23 @@ with tab1:
          label="Overall Churn Rate",
          value=f"{churn_rate:.1%}" # Format as a percentage
     )
-
+    st.subheader('Churn Rate by Contract Type')
     st.altair_chart(churn_rate_by_contract_chart, use_container_width=True)
-
+    st.subheader('Churn Rate by Internet Service Type')
     st.altair_chart(churn_rate_by_internet_service_chart, use_container_width=True)
 
   
 with tab2:
 
-  
+  st.subheader('Top #5 Churn Reasons ')
+
+  st.write("This chart shows the top 5 reasons customers cited for churning. 'Dissatisfaction' and 'Attitude of service provider' are the most common reasons.")  
   churn_reasons_count = alt.Chart(churn_reasons).mark_bar().encode( 
       y=alt.X('Churn Reason', title='', sort='-x'),
       x=alt.Y('Count', title=''),
       color='Count'
       ).properties(
-          title = 'Top 5 Churn Reasons'
+          title = ''
       )
 
   
@@ -142,13 +145,15 @@ with tab2:
 # 3. Calculate the churn rate for the new brackets
   churn_by_bracket = fiber_customers.groupby('PriceBracket')['Churn Value'].mean().reset_index()
 
+  st.subheader("Churn Rate by Price Bracket for Fiber Optic Customers")
+  st.write("This chart reveals that Fiber Optic customers in the Low-Tier price bracket have the highest churn rate, suggesting that lower-cost plans may be associated with higher churn.")
 # 4. Create the Altair bar chart
   bracket_chart = alt.Chart(churn_by_bracket).mark_bar().encode(
     y=alt.X('PriceBracket:N', title='Price Bracket', sort='-x'),
     x=alt.Y('Churn Value:Q', title='Churn Rate', axis=alt.Axis(format='%')), 
     color='PriceBracket'
 ).properties(
-    title='Churn Rate by Price Bracket for Fiber Optic Customers'
+    title=''
 )
   st.markdown("\n\n\n\n\n")
 # 5. Display the chart
