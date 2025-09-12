@@ -7,7 +7,7 @@ import seaborn as sns
 st.set_page_config(layout="wide")
 #
 st.title('Customer Churn Analysis Dashboard')
-st.markdown('This dashboard provides insights into customer churn for a telecommunications company. Use the filters on the left to explore different segments of customers and understand their churn behavior.')
+st.markdown('This dashboard provides insights into customer churn for a telecommunications company. Use the filters')
 
 st.markdown(' ')
 
@@ -52,7 +52,7 @@ churn_rate_by_contract = filtered_df.groupby('Contract')['Churn Value'].mean().r
 churn_rate_by_contract_chart = alt.Chart(churn_rate_by_contract).mark_bar().encode(
     y=alt.X('Contract:N', title=''),
     x=alt.Y('Churn Value:Q', title='Churn Rate', axis=alt.Axis(format='%')),
-    color='Contract'
+    color='Churn Value'
 ).properties(
     title='Churn Rate by Contract Type'
 )
@@ -62,7 +62,7 @@ churn_rate_by_internet_service = filtered_df.groupby('Internet Service')['Churn 
 churn_rate_by_internet_service_chart = alt.Chart(churn_rate_by_internet_service).mark_bar().encode(
     y=alt.X('Internet Service:N', title=''),
     x=alt.Y('Churn Value:Q', title='Churn Rate', axis=alt.Axis(format='%')),
-    color='Internet Service'
+    color='Churn Value'
 ).properties(
     title='Churn Rate by Internet Service Type'
 )
@@ -98,7 +98,7 @@ with tab2:
   churn_reasons_count = alt.Chart(churn_reasons).mark_bar().encode( 
       y=alt.X('Churn Reason', title='', sort='-x'),
       x=alt.Y('Count', title=''),
-      color='Churn Reason'
+      color='Count'
       ).properties(
           title = 'Top 5 Churn Reasons'
       )
@@ -127,7 +127,7 @@ with tab2:
   ax.set_ylabel('Monthly Charges ($)')
 
     # 4. Display the plot in your Streamlit app
-  st.pyplot(fig)
+  st.pyplot(fig, use_container_width=True)
   iber_customers = filtered_df[filtered_df['Internet Service'] == 'Fiber optic'].copy()
 
 # 2. Create the price brackets using pd.cut
@@ -144,9 +144,9 @@ with tab2:
 
 # 4. Create the Altair bar chart
   bracket_chart = alt.Chart(churn_by_bracket).mark_bar().encode(
-    x=alt.X('PriceBracket:N', title='Price Bracket', sort='-x'),
-    y=alt.Y('Churn Value:Q', title='Churn Rate', axis=alt.Axis(format='%')), 
-    color='Churn Value'
+    y=alt.X('PriceBracket:N', title='Price Bracket', sort='-x'),
+    x=alt.Y('Churn Value:Q', title='Churn Rate', axis=alt.Axis(format='%')), 
+    color='PriceBracket'
 ).properties(
     title='Churn Rate by Price Bracket for Fiber Optic Customers'
 )
